@@ -6,7 +6,6 @@ Parameters:
   FirmsKey:
     Type: String
     NoEcho: true
-    Default: not-set-yet
 
 Globals:
   Function:
@@ -44,6 +43,7 @@ Resources:
     Properties:
       CodeUri: ../backend/
       Handler: smoke.handler
+      Timeout: 28
       Policies:
         - DynamoDBCrudPolicy: {TableName: !Ref WhiffCache}
       Events:

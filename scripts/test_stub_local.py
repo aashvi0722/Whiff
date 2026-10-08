@@ -20,8 +20,8 @@ def expect(label, ok, extra=""):
     print(("ok   " if ok else "FAIL ") + label + (f"  {extra}" if extra and not ok else ""))
     fails += 0 if ok else 1
 
-s, b = call(smoke, {"lat": "28.6", "lon": "77.2"})
-expect("smoke default = high, valid", s == 200 and b["risk"] == "high" and not check_response("smoke", b))
+s, b = call(smoke, {"scenario": "smoke_high"})
+expect("smoke scenario=smoke_high, valid", s == 200 and b["risk"] == "high" and not check_response("smoke", b))
 s, b = call(smoke, {"scenario": "smoke_none"})
 expect("smoke scenario=smoke_none", s == 200 and b["risk"] == "none" and not check_response("smoke", b))
 s, b = call(smoke, {"scenario": "smoke_stale"})
@@ -36,8 +36,21 @@ s, b = call(smoke, {"scenario": "no_such_thing"})
 expect("smoke unknown scenario falls back", s == 200 and b["risk"] == "high")
 s, b = call(smoke, {"scenario": "day_windows"})
 expect("smoke ignores another endpoint's scenario", s == 200 and "risk" in b)
-s, b = call(smoke, None)
-expect("smoke with no query string", s == 200)
+# --- real /smoke input handling and failure shapes (network replaced by fakes) ---
+for q, label in [(None, "no query"), ({"lat": "0", "lon": "0"}, "lat=0 lon=0"), ({"lat": "abc", "lon": "77"}, "non-numeric"),
+                 ({"lat": "nan", "lon": "77"}, "nan"), ({"lat": "28.6"}, "missing lon"), ({"lat": "60", "lon": "77"}, "out of India")]:
+    s, b = call(smoke, q)
+    expect(f"smoke bad input rejected politely ({label})", s == 400 and b["error"]["code"] == "invalid_location" and not check_response("error", b))
+import json as _json
+_real = smoke.compute_live
+smoke.compute_live = lambda lat, lon, now: _json.load(open(os.path.join(ROOT, "contract", "smoke_none.sample.json")))
+s, b = call(smoke, {"lat": "12.97", "lon": "77.59"})
+expect("smoke live path returns 200 contract body", s == 200 and b["risk"] == "none")
+def _boom(*a, **k): raise RuntimeError("secret-key-123 exploded")
+smoke.compute_live = _boom
+s, b = call(smoke, {"lat": "28.6", "lon": "77.2"})
+expect("smoke upstream failure => 503 error shape, no trace", s == 503 and b["error"]["code"] == "upstream_unavailable" and "secret" not in json.dumps(b))
+smoke.compute_live = _real
 s, b = call(day, {"audience": "child"})
 expect("day default = windows, valid", s == 200 and b["day_state"] == "windows" and not check_response("day", b))
 for sc, st in [("day_caution", "caution"), ("day_stay_in", "stay_in")]:
