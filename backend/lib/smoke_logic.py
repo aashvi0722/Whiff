@@ -10,6 +10,8 @@ RADIUS_KM = 700
 MAX_TRAVEL_H = 48
 MIN_ALIGN = 0.5
 SPEED_FLOOR = 5.0          # km/h; calm wind => "too slow"
+FIRE_STALE_H = 15          # VIIRS passes roughly every 12 h (about 01:30 and 13:30 local) plus a few hours of latency,
+                           # so the playbook's 6 h was too strict: it would mark half of every day "stale".
 RISK_THRESHOLDS = (5, 30, 120)   # none < 5 <= low < 30 <= medium < 120 <= high  (tune on replays)
 CROP_REGIONS = ("IN-PB", "IN-HR", "IN-UP")
 LEVELS = ["low", "medium", "high"]
@@ -111,15 +113,15 @@ def confidence(risk, spread, trend, arrival, age):
             reasons.append("arrival_soon")
         elif arrival > 36:
             reasons.append("arrival_far")
-    if age > 6:
+    if age > FIRE_STALE_H:
         reasons.append("fires_stale")
     if risk == "none":
-        level = 0 if age > 6 else (1 if spread > 30 else 2)
+        level = 0 if age > FIRE_STALE_H else (1 if spread > 30 else 2)
     else:
         level = 1
         if spread < 30 and trend in ("rising", "steady") and arrival < 24:
             level += 1
-        if spread > 45 or arrival > 36 or age > 6:
+        if spread > 45 or arrival > 36 or age > FIRE_STALE_H:
             level -= 1
     return LEVELS[max(0, min(2, level))], reasons
 

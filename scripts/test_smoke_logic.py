@@ -99,7 +99,7 @@ pb = [cell(30.9, 75.85, 300, nprev=100, region="IN-PB")]
 r = sl.build_smoke(*DELHI, "Delhi", pb, wind(18, 330), NOW, 3)
 expect("Punjab fires in Oct => crop_residue_likely", r["sources"] and r["sources"][0]["type"] == "crop_residue_likely", r["sources"])
 expect("high confidence: steady + rising + <24 h", r["confidence"] == "high", (r["confidence"], r["confidence_reasons"]))
-r = sl.build_smoke(*DELHI, "Delhi", pb, wind(18, 330), NOW, 9, stale=True)
+r = sl.build_smoke(*DELHI, "Delhi", pb, wind(18, 330), NOW, 16, stale=True)
 expect("stale fire data lowers confidence and flags it", r["confidence"] == "medium" and "fires_stale" in r["confidence_reasons"] and r["data_quality"]["stale"], r["confidence"])
 expect("stale adds data_stale code", any(c["code"] == "data_stale" for c in r["reason_codes"]))
 nov = datetime(2026, 12, 15, 6, 0, tzinfo=IST)

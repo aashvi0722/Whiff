@@ -6,7 +6,6 @@ Parameters:
   FirmsKey:
     Type: String
     NoEcho: true
-    Default: not-set-yet
 
 Globals:
   Function:
