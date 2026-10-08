@@ -1,0 +1,19 @@
+# dependencies and builds
+node_modules/
+dist/
+.aws-sam/
+__pycache__/
+*.pyc
+.venv/
+
+# secrets and local config (never commit)
+.env
+.env.local
+samconfig.toml
+*.pem
+.aws/
+
+# editor / OS
+.DS_Store
+.vscode/
+Thumbs.db

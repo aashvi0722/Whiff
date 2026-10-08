@@ -1,0 +1,58 @@
+{
+  "contract_version": 1,
+  "mode": "live",
+  "replay": null,
+  "generated_at": "2026-10-09T06:00:00+05:30",
+  "location": {
+    "lat": 28.61,
+    "lon": 77.21,
+    "label": "Delhi"
+  },
+  "risk": "medium",
+  "arrival_hours": 24,
+  "arrival_range_hours": [
+    18,
+    32
+  ],
+  "confidence": "low",
+  "confidence_reasons": [
+    "fires_stale"
+  ],
+  "sources": [
+    {
+      "type": "crop_residue_likely",
+      "region_code": "IN-PB",
+      "fire_count": 120,
+      "distance_km": 300,
+      "bearing_deg": 298,
+      "travel_hours": 24
+    }
+  ],
+  "wind": {
+    "from_deg": 298,
+    "speed_kmh": 15,
+    "steady": true
+  },
+  "festival": {
+    "active": false,
+    "name": null
+  },
+  "reason_codes": [
+    {
+      "code": "smoke_aligned_fires",
+      "params": {
+        "count": 120,
+        "km": 300
+      }
+    },
+    {
+      "code": "data_stale",
+      "params": {}
+    }
+  ],
+  "data_quality": {
+    "fires_age_hours": 9,
+    "stale": true,
+    "served_from": "cache"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "contract_version": 1,
+  "mode": "live",
+  "replay": null,
+  "generated_at": "2026-10-09T06:00:00+05:30",
+  "location": {
+    "lat": 12.97,
+    "lon": 77.59,
+    "label": "Bengaluru"
+  },
+  "risk": "none",
+  "arrival_hours": null,
+  "arrival_range_hours": null,
+  "confidence": "high",
+  "confidence_reasons": [
+    "wind_steady"
+  ],
+  "sources": [],
+  "wind": {
+    "from_deg": 240,
+    "speed_kmh": 14,
+    "steady": true
+  },
+  "festival": {
+    "active": false,
+    "name": null
+  },
+  "reason_codes": [
+    {
+      "code": "smoke_none_upwind",
+      "params": {}
+    },
+    {
+      "code": "wind_from_clean_sector",
+      "params": {}
+    }
+  ],
+  "data_quality": {
+    "fires_age_hours": 3,
+    "stale": false,
+    "served_from": "cache"
+  }
+}

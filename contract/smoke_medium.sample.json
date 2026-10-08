@@ -1,0 +1,69 @@
+{
+  "contract_version": 1,
+  "mode": "live",
+  "replay": null,
+  "generated_at": "2026-10-09T06:00:00+05:30",
+  "location": {
+    "lat": 26.85,
+    "lon": 80.95,
+    "label": "Lucknow"
+  },
+  "risk": "medium",
+  "arrival_hours": 30,
+  "arrival_range_hours": [
+    24,
+    38
+  ],
+  "confidence": "medium",
+  "confidence_reasons": [
+    "wind_steady",
+    "fires_steady"
+  ],
+  "sources": [
+    {
+      "type": "crop_residue_likely",
+      "region_code": "IN-HR",
+      "fire_count": 150,
+      "distance_km": 480,
+      "bearing_deg": 300,
+      "travel_hours": 31
+    },
+    {
+      "type": "unknown",
+      "region_code": "IN-UP",
+      "fire_count": 40,
+      "distance_km": 210,
+      "bearing_deg": 285,
+      "travel_hours": 22
+    }
+  ],
+  "wind": {
+    "from_deg": 295,
+    "speed_kmh": 16,
+    "steady": true
+  },
+  "festival": {
+    "active": true,
+    "name": "Diwali"
+  },
+  "reason_codes": [
+    {
+      "code": "smoke_aligned_fires",
+      "params": {
+        "count": 190,
+        "km": 480
+      }
+    },
+    {
+      "code": "festival_night",
+      "params": {
+        "name": "Diwali"
+      }
+    }
+  ],
+  "data_quality": {
+    "fires_age_hours": 2,
+    "stale": false,
+    "served_from": "live"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "contract_version": 1,
+  "error": {
+    "code": "upstream_unavailable",
+    "retry_after_s": 60
+  }
+}

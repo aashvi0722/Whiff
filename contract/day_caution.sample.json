@@ -1,0 +1,165 @@
+{
+  "contract_version": 1,
+  "date": "2026-10-09",
+  "audience": "general",
+  "location": {
+    "lat": 28.61,
+    "lon": 77.21,
+    "label": "Delhi"
+  },
+  "day_state": "caution",
+  "aqi_is_estimate": true,
+  "hours": [
+    {
+      "h": 5,
+      "pm25": 78,
+      "aqi": 159,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 6,
+      "pm25": 70,
+      "aqi": 132,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 7,
+      "pm25": 66,
+      "aqi": 118,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 8,
+      "pm25": 68,
+      "aqi": 125,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 9,
+      "pm25": 72,
+      "aqi": 139,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 10,
+      "pm25": 76,
+      "aqi": 152,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 11,
+      "pm25": 80,
+      "aqi": 166,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 12,
+      "pm25": 83,
+      "aqi": 176,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 13,
+      "pm25": 85,
+      "aqi": 183,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 14,
+      "pm25": 84,
+      "aqi": 180,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 15,
+      "pm25": 82,
+      "aqi": 173,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 16,
+      "pm25": 80,
+      "aqi": 166,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 17,
+      "pm25": 84,
+      "aqi": 180,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 18,
+      "pm25": 88,
+      "aqi": 193,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 19,
+      "pm25": 90,
+      "aqi": 200,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 20,
+      "pm25": 86,
+      "aqi": 186,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 21,
+      "pm25": 82,
+      "aqi": 173,
+      "band": "moderate",
+      "status": "caution"
+    },
+    {
+      "h": 22,
+      "pm25": 78,
+      "aqi": 159,
+      "band": "moderate",
+      "status": "caution"
+    }
+  ],
+  "windows": [],
+  "best_hour": 7,
+  "worst_hour": 19,
+  "day_avg_pm25": 80,
+  "exposure_avoided_hours": 17,
+  "cigarette_equiv": {
+    "value": 4,
+    "approx": true
+  },
+  "reason_codes": [
+    {
+      "code": "best_hour",
+      "params": {
+        "hour": 7
+      }
+    }
+  ],
+  "advice_codes": [
+    "mask_n95_outdoors",
+    "delay_outdoor_events"
+  ],
+  "data_quality": {
+    "stale": false,
+    "served_from": "cache"
+  }
+}

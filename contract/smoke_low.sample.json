@@ -1,0 +1,58 @@
+{
+  "contract_version": 1,
+  "mode": "live",
+  "replay": null,
+  "generated_at": "2026-10-09T06:00:00+05:30",
+  "location": {
+    "lat": 30.73,
+    "lon": 76.78,
+    "label": "Chandigarh"
+  },
+  "risk": "low",
+  "arrival_hours": 28,
+  "arrival_range_hours": [
+    22,
+    40
+  ],
+  "confidence": "low",
+  "confidence_reasons": [
+    "wind_variable"
+  ],
+  "sources": [
+    {
+      "type": "crop_residue_likely",
+      "region_code": "IN-PB",
+      "fire_count": 35,
+      "distance_km": 140,
+      "bearing_deg": 250,
+      "travel_hours": 28
+    }
+  ],
+  "wind": {
+    "from_deg": 250,
+    "speed_kmh": 6,
+    "steady": false
+  },
+  "festival": {
+    "active": false,
+    "name": null
+  },
+  "reason_codes": [
+    {
+      "code": "smoke_aligned_fires",
+      "params": {
+        "count": 35,
+        "km": 140
+      }
+    },
+    {
+      "code": "wind_calm_trapping",
+      "params": {}
+    }
+  ],
+  "data_quality": {
+    "fires_age_hours": 4,
+    "stale": false,
+    "served_from": "cache"
+  }
+}

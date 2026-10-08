@@ -1,0 +1,45 @@
+{
+  "contract_version": 1,
+  "note": "A sends codes only. B writes the English and Hindi text for every code in frontend/src/i18n.",
+  "reason_codes": [
+    {"code": "smoke_aligned_fires", "params": ["count", "km"], "meaning": "Fires are upwind of you and the wind is carrying smoke toward you."},
+    {"code": "smoke_none_upwind", "params": [], "meaning": "No significant fires upwind within range."},
+    {"code": "wind_from_clean_sector", "params": [], "meaning": "Wind is bringing cleaner air in."},
+    {"code": "wind_calm_trapping", "params": [], "meaning": "Wind is calm, so pollution sits in place."},
+    {"code": "festival_night", "params": ["name"], "meaning": "Firecracker-heavy night in the forecast window."},
+    {"code": "pm25_below_avg", "params": ["percent"], "meaning": "This window is cleaner than the day average by percent."},
+    {"code": "pm25_above_avg", "params": ["percent"], "meaning": "This period is dirtier than the day average by percent."},
+    {"code": "best_hour", "params": ["hour"], "meaning": "Cleanest hour of the day."},
+    {"code": "worst_hour", "params": ["hour"], "meaning": "Dirtiest hour of the day."},
+    {"code": "all_day_poor", "params": ["hour"], "meaning": "Every hour is poor. hour = the least-bad hour."},
+    {"code": "forecast_rising", "params": [], "meaning": "Air quality is forecast to get worse."},
+    {"code": "forecast_falling", "params": [], "meaning": "Air quality is forecast to improve."},
+    {"code": "data_stale", "params": [], "meaning": "Upstream data is older than expected; showing last known values."}
+  ],
+  "advice_codes": [
+    "keep_windows_closed_evening",
+    "run_purifier",
+    "delay_outdoor_events",
+    "mask_n95_outdoors",
+    "shift_heavy_work",
+    "indoor_swap"
+  ],
+  "confidence_reasons": [
+    "wind_steady", "fires_rising", "fires_steady", "arrival_soon",
+    "wind_variable", "arrival_far", "fires_stale", "region_cloudy"
+  ],
+  "enums": {
+    "risk": ["none", "low", "medium", "high"],
+    "confidence": ["low", "medium", "high"],
+    "mode": ["live", "replay"],
+    "source_type": ["crop_residue_likely", "unknown"],
+    "served_from": ["live", "cache", "replay"],
+    "audience": ["general", "sensitive", "child", "outdoor"],
+    "day_state": ["windows", "caution", "stay_in"],
+    "hour_status": ["go", "caution", "stay"],
+    "band": ["good", "satisfactory", "moderate", "poor", "very_poor", "severe"],
+    "likely_cause": ["festival", "still_air", "smoke_arrival", "unknown"],
+    "cause_confidence": ["low", "medium", "high"],
+    "error_code": ["upstream_unavailable", "invalid_location", "unknown_replay"]
+  }
+}

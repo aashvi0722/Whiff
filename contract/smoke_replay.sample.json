@@ -1,0 +1,59 @@
+{
+  "contract_version": 1,
+  "mode": "replay",
+  "replay": {
+    "event_id": "delhi-nov-2025",
+    "label_key": "replay_delhi_nov_2025",
+    "as_of": "2025-11-04T06:00:00+05:30"
+  },
+  "generated_at": "2025-11-04T06:00:00+05:30",
+  "location": {
+    "lat": 28.61,
+    "lon": 77.21,
+    "label": "Delhi"
+  },
+  "risk": "high",
+  "arrival_hours": 18,
+  "arrival_range_hours": [
+    14,
+    22
+  ],
+  "confidence": "medium",
+  "confidence_reasons": [
+    "wind_steady",
+    "fires_rising"
+  ],
+  "sources": [
+    {
+      "type": "crop_residue_likely",
+      "region_code": "IN-PB",
+      "fire_count": 412,
+      "distance_km": 320,
+      "bearing_deg": 295,
+      "travel_hours": 19
+    }
+  ],
+  "wind": {
+    "from_deg": 300,
+    "speed_kmh": 18,
+    "steady": true
+  },
+  "festival": {
+    "active": false,
+    "name": null
+  },
+  "reason_codes": [
+    {
+      "code": "smoke_aligned_fires",
+      "params": {
+        "count": 412,
+        "km": 320
+      }
+    }
+  ],
+  "data_quality": {
+    "fires_age_hours": 3,
+    "stale": false,
+    "served_from": "replay"
+  }
+}

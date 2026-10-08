@@ -1,0 +1,5 @@
+{
+  "verified": false,
+  "note": "TODO (A, Fri): fill with firecracker-heavy nights for the next 60 days from an official calendar. Do NOT use memory. Format: {\"name\": \"...\", \"night\": \"YYYY-MM-DD\", \"source\": \"url\"}.",
+  "nights": []
+}

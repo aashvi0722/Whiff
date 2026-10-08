@@ -1,0 +1,17 @@
+{
+  "contract_version": 1,
+  "events": [
+    {
+      "event_id": "delhi-nov-2025",
+      "city": "Delhi",
+      "label_key": "replay_delhi_nov_2025",
+      "as_of": "2025-11-04T06:00:00+05:30"
+    },
+    {
+      "event_id": "lucknow-nov-2025",
+      "city": "Lucknow",
+      "label_key": "replay_lucknow_nov_2025",
+      "as_of": "2025-11-05T06:00:00+05:30"
+    }
+  ]
+}
