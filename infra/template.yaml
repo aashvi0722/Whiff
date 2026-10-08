@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Whiff API (stub phase, serves the contract samples)
+
+Parameters:
+  FirmsKey:
+    Type: String
+    NoEcho: true
+    Default: not-set-yet
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 20
+    MemorySize: 256
+    Environment:
+      Variables:
+        TABLE: !Ref WhiffCache
+        FIRMS_KEY: !Ref FirmsKey
+
+Resources:
+  WhiffApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Tags:
+        Project: Whiff
+      CorsConfiguration:
+        AllowOrigins: ['*']
+        AllowMethods: [GET]
+        AllowHeaders: ['*']
+
+  WhiffCache:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - {AttributeName: pk, AttributeType: S}
+      KeySchema:
+        - {AttributeName: pk, KeyType: HASH}
+      TimeToLiveSpecification: {AttributeName: ttl, Enabled: true}
+
+  SmokeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: smoke.handler
+      Policies:
+        - DynamoDBCrudPolicy: {TableName: !Ref WhiffCache}
+      Events:
+        Get:
+          Type: HttpApi
+          Properties: {ApiId: !Ref WhiffApi, Path: /smoke, Method: GET}
+
+  DayFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: day.handler
+      Policies:
+        - DynamoDBCrudPolicy: {TableName: !Ref WhiffCache}
+      Events:
+        Get:
+          Type: HttpApi
+          Properties: {ApiId: !Ref WhiffApi, Path: /day, Method: GET}
+
+  HistoryFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: history.handler
+      Events:
+        Get:
+          Type: HttpApi
+          Properties: {ApiId: !Ref WhiffApi, Path: /history, Method: GET}
+
+  ReplaysFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: replays.handler
+      Events:
+        Get:
+          Type: HttpApi
+          Properties: {ApiId: !Ref WhiffApi, Path: /replays, Method: GET}
+
+Outputs:
+  ApiUrl:
+    Value: !Sub 'https://${WhiffApi}.execute-api.${AWS::Region}.amazonaws.com'
