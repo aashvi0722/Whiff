@@ -161,6 +161,7 @@
   ],
   "data_quality": {
     "stale": false,
-    "served_from": "cache"
+    "served_from": "cache",
+    "missing_hours": 0
   }
 }

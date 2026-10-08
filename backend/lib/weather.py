@@ -68,3 +68,21 @@ def air_quality_url(lat, lon, past_days=3, forecast_days=2):
                                 "past_days": past_days, "forecast_days": forecast_days,
                                 "timezone": "Asia/Kolkata"})
     return f"{AIR_QUALITY}?{q}"
+
+
+def parse_air_quality(data, day):
+    """Return {hour: (pm25, pm10_or_None)} for the given date (datetime.date), local time."""
+    try:
+        h = data["hourly"]
+        times, pm25 = h["time"], h["pm2_5"]
+    except (KeyError, TypeError):
+        raise WeatherError("unexpected Open-Meteo air-quality response") from None
+    pm10 = h.get("pm10") or [None] * len(times)
+    prefix = day.isoformat()
+    out = {}
+    for i, t in enumerate(times):
+        if t.startswith(prefix):
+            out[int(t[11:13])] = (pm25[i], pm10[i])
+    if not out:
+        raise WeatherError("no air-quality hours for today")
+    return out

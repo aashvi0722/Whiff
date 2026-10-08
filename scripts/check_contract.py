@@ -58,7 +58,12 @@ def check_day(d, errs):
     if d.get("audience") not in E["audience"]: errs.append("day: bad audience")
     if d.get("day_state") not in E["day_state"]: errs.append("day: bad day_state")
     hrs = d.get("hours", [])
-    if [h["h"] for h in hrs] != list(range(5, 23)): errs.append("day: hours must be 5..22 in order")
+    hs = [h["h"] for h in hrs]
+    if hs != sorted(set(hs)) or any(h < 5 or h > 22 for h in hs):
+        errs.append("day: hours must be unique, increasing, within 5..22")
+    mh = d.get("data_quality", {}).get("missing_hours")
+    if mh is None or len(hs) + mh != 18:
+        errs.append("day: data_quality.missing_hours must equal 18 minus the number of hours")
     for h in hrs:
         if h["band"] != band_of(h["aqi"]): errs.append(f"day: hour {h['h']} band does not match aqi")
         if h["status"] not in E["hour_status"]: errs.append(f"day: hour {h['h']} bad status")
