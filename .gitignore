@@ -17,3 +17,6 @@ samconfig.toml
 .DS_Store
 .vscode/
 Thumbs.db
+
+# bundled copy of contract samples (made by scripts/sync_samples.py)
+backend/samples/
