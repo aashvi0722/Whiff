@@ -31,6 +31,7 @@ returns the file `<scenario>.sample.json`.
 - `day_state: "windows"` => `windows` non-empty. `caution` => `windows` empty, use `best_hour`. `stay_in` => `windows` empty, every active hour is "stay".
 - `cigarette_equiv` is always `approx: true`.
 - Replay event ids in `replays.sample.json` are **placeholders** until `docs/validation-events.md` fixes the real events.
+- `windows[].start_h` and `end_h` are both inclusive hour slots. Hour `h` means `h:00` to `h:59`. So `start_h: 6, end_h: 8` is 6:00 to 9:00. Display it as `start_h:00` to `(end_h + 1):00`. The same applies to `best_hour` and `worst_hour`.
 
 ## Check before every sync
 `python3 scripts/check_contract.py`
