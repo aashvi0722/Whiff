@@ -6,16 +6,10 @@ from datetime import datetime, timezone
 
 from lib import firms, weather, smoke_logic, festival
 from lib.stub import serve, respond
+from lib.api import error_response as _err, parse_location
 
 CACHE_TTL_S = 15 * 60
 _CACHE = {"t": 0.0, "cells": None, "age": None}   # per warm Lambda container; DynamoDB cache comes with the ingest job
-
-
-def _err(status, code, retry=None):
-    err = {"code": code}
-    if retry:
-        err["retry_after_s"] = retry
-    return respond(status, {"contract_version": 1, "error": err})
 
 
 def _fires(now_utc):
@@ -45,14 +39,12 @@ def handler(event, context):
     q = (event or {}).get("queryStringParameters") or {}
     if q.get("scenario") or q.get("replay"):
         return serve(event, "smoke", "smoke_high")
-    try:
-        lat, lon = float(q["lat"]), float(q["lon"])
-    except (KeyError, ValueError, TypeError):
+    loc = parse_location(q)
+    if loc is None:
         return _err(400, "invalid_location")
-    if not (6 <= lat <= 37 and 68 <= lon <= 98):
-        return _err(400, "invalid_location")
+    lat, lon = loc
     try:
-        return respond(200, compute_live(round(lat, 2), round(lon, 2), datetime.now(timezone.utc)))
+        return respond(200, compute_live(lat, lon, datetime.now(timezone.utc)))
     except Exception as e:  # never leak a stack trace or the key
         msg = str(e)
         key = os.environ.get("FIRMS_KEY", "")

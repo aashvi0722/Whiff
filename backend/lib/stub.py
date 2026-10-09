@@ -5,8 +5,8 @@ import os
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _DIRS = [
-    os.path.join(_HERE, "..", "samples"),         # bundled into the Lambda package
-    os.path.join(_HERE, "..", "..", "contract"),  # running from the repo locally
+    os.path.join(_HERE, "..", "..", "contract"),  # running from the repo: always the live contract files
+    os.path.join(_HERE, "..", "samples"),         # inside the Lambda package (bundled by sync_samples.py)
 ]
 
 

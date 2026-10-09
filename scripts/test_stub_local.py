@@ -51,8 +51,11 @@ smoke.compute_live = _boom
 s, b = call(smoke, {"lat": "28.6", "lon": "77.2"})
 expect("smoke upstream failure => 503 error shape, no trace", s == 503 and b["error"]["code"] == "upstream_unavailable" and "secret" not in json.dumps(b))
 smoke.compute_live = _real
-s, b = call(day, {"audience": "child"})
-expect("day default = windows, valid", s == 200 and b["day_state"] == "windows" and not check_response("day", b))
+s, b = call(day, {"scenario": "day_windows"})
+expect("day scenario=day_windows, valid", s == 200 and b["day_state"] == "windows" and not check_response("day", b))
+for q, label in [(None, "no query"), ({"lat": "0", "lon": "0"}, "lat=0 lon=0"), ({"lat": "x", "lon": "77"}, "non-numeric")]:
+    s, b = call(day, q)
+    expect(f"day bad input rejected politely ({label})", s == 400 and b["error"]["code"] == "invalid_location")
 for sc, st in [("day_caution", "caution"), ("day_stay_in", "stay_in")]:
     s, b = call(day, {"scenario": sc})
     expect(f"day scenario={sc}", s == 200 and b["day_state"] == st and not check_response("day", b))
