@@ -1,38 +1,15 @@
-"""GET /smoke?lat&lon  (real logic, S2).
+"""GET /smoke?lat&lon  (real logic; cache-first via DynamoDB, stale-on-failure).
 ?scenario= and ?replay= keep returning contract samples (demo and testing aids)."""
 import os
-import time
 from datetime import datetime, timezone
 
-from lib import firms, weather, smoke_logic, festival
+from lib import cache as cache_mod, service
 from lib.stub import serve, respond
 from lib.api import error_response as _err, parse_location
 
-CACHE_TTL_S = 15 * 60
-_CACHE = {"t": 0.0, "cells": None, "age": None}   # per warm Lambda container; DynamoDB cache comes with the ingest job
-
-
-def _fires(now_utc):
-    """Return (cells, fire_age_hours, served_from). Raises FirmsError if no source answers."""
-    if _CACHE["cells"] is not None and time.time() - _CACHE["t"] < CACHE_TTL_S:
-        return _CACHE["cells"], _CACHE["age"], "cache"
-    fires, errors = firms.fetch_fires(os.environ.get("FIRMS_KEY", ""), now_utc)
-    if errors:
-        print("FIRMS partial errors:", len(errors))
-    cells = firms.cluster(fires, now_utc)
-    age = firms.newest_age_hours(fires, now_utc)
-    age = 0 if age is None else age
-    _CACHE.update(t=time.time(), cells=cells, age=age)
-    return cells, age, "live"
-
 
 def compute_live(lat, lon, now_utc):
-    cells, age, served_from = _fires(now_utc)
-    now_ist = now_utc.astimezone(smoke_logic.IST)
-    wind = weather.fetch_wind(lat, lon, now_ist.replace(tzinfo=None))
-    return smoke_logic.build_smoke(
-        lat, lon, festival.city_label(lat, lon), cells, wind, now_utc, age,
-        festival=festival.festival_for(now_ist.date()), served_from=served_from)
+    return service.compute_smoke(lat, lon, now_utc, cache_mod.get_cache(), os.environ.get("FIRMS_KEY", ""))
 
 
 def handler(event, context):
