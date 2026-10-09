@@ -4,7 +4,7 @@ from .bands import AUDIENCES, aqi_from, band_of, status_for
 FIRST_H, LAST_H, LAST_ACTIVE_H = 5, 22, 21
 
 
-def build_day(hourly, audience, date_iso, location, wake_h=None, served_from="live"):
+def build_day(hourly, audience, date_iso, location, wake_h=None, served_from="live", stale=False):
     """hourly: {hour: (pm25, pm10_or_None)}. Gaps and None values are skipped, never crash."""
     if audience not in AUDIENCES:
         audience = "general"
@@ -79,6 +79,8 @@ def build_day(hourly, audience, date_iso, location, wake_h=None, served_from="li
     if audience == "outdoor" and (state != "windows" or max_aqi > 200):
         advice.append("shift_heavy_work")
     advice = list(dict.fromkeys(advice))
+    if stale:
+        reasons.append({"code": "data_stale", "params": {}})
 
     nongo = sum(1 for r in active if r["status"] != "go")
     hours = [{k: v for k, v in r.items() if not k.startswith("_")} for r in rows]
@@ -89,5 +91,5 @@ def build_day(hourly, audience, date_iso, location, wake_h=None, served_from="li
         "exposure_avoided_hours": nongo,
         "cigarette_equiv": {"value": round(day_avg / 22), "approx": True},
         "reason_codes": reasons, "advice_codes": advice,
-        "data_quality": {"stale": False, "served_from": served_from, "missing_hours": missing},
+        "data_quality": {"stale": bool(stale), "served_from": served_from, "missing_hours": missing},
     }

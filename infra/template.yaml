@@ -83,6 +83,21 @@ Resources:
           Type: HttpApi
           Properties: {ApiId: !Ref WhiffApi, Path: /replays, Method: GET}
 
+  IngestFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: ingest.handler
+      Timeout: 90
+      Policies:
+        - DynamoDBCrudPolicy: {TableName: !Ref WhiffCache}
+      Events:
+        Hourly:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 hour)
+            Description: Hourly refresh of fire clusters and per-city results
+
 Outputs:
   ApiUrl:
     Value: !Sub 'https://${WhiffApi}.execute-api.${AWS::Region}.amazonaws.com'
