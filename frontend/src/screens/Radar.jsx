@@ -1,124 +1,97 @@
-import { useEffect, useState } from 'react';
-import { getSmokeRadar } from '../api.js';
-import { t } from '../i18n/index.js';
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { getSmokeRadar } from '../lib/api.js'
+import { useApi } from '../lib/useApi.js'
+import { useLang } from '../i18n/useLang.jsx'
+import RadarSvg from '../components/RadarSvg.jsx'
+import { Banners, ErrorCard, ScreenSkeleton } from '../components/StateViews.jsx'
 
-const MAX_RADAR_KM = 500;
-const RADAR_SVG_RADIUS = 90;
+const card8 = deg => ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(deg / 45) % 8]
+// Shown only in the first part of burning season. Delete this line's usage when the season is underway.
+const isEarlySeason = () => { const d = new Date(); return d.getMonth() === 9 && d.getDate() <= 20 }
 
-function getSvgCoords(distanceKm, bearingDeg) {
-  const radius = (Math.min(distanceKm, MAX_RADAR_KM) / MAX_RADAR_KM) * RADAR_SVG_RADIUS;
-  const angleRad = (bearingDeg - 90) * (Math.PI / 180);
-  return {
-    x: 100 + radius * Math.cos(angleRad),
-    y: 100 + radius * Math.sin(angleRad)
-  };
-}
+const PinIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z" /><circle cx="12" cy="10" r="2.5" /></svg>
+)
 
 export default function Radar() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { t, tryT, city, region } = useLang()
+  const { status, data, reload } = useApi(getSmokeRadar)
 
+  const risk = ['none', 'low', 'medium', 'high'].includes(data?.risk) ? data.risk : 'low'
   useEffect(() => {
-    getSmokeRadar('smoke_high').then(res => {
-      setData(res);
-      setLoading(false);
-    });
-  }, []);
+    if (!data) return
+    document.body.dataset.risk = risk
+    return () => { delete document.body.dataset.risk }
+  }, [data, risk])
 
-  if (loading) return <div className="screen">Loading radar...</div>;
-  if (!data) return null;
+  if (status === 'loading') return <ScreenSkeleton />
+  if (!data) return <ErrorCard onRetry={reload} />
+
+  const none = risk === 'none'
+  const range = data.arrival_range_hours
+  const top = [...(data.sources || [])].sort((a, b) => b.fire_count - a.fire_count)[0]
+  const reasons = (data.reason_codes || []).map(r => tryT(r.code, r.params)).filter(Boolean)
+  const confReasons = (data.confidence_reasons || []).map(c => tryT('cr_' + c)).filter(Boolean)
+  const wind = data.wind
+  const showSeason = (risk === 'low' || none) && data.mode !== 'replay' && isEarlySeason()
 
   return (
-    <div className="screen">
-      {/* Massive Typography Header */}
-      <div style={{ marginTop: '12px' }}>
-        <p className="text-soft" style={{ fontSize: '1rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '4px' }}>
-          {data.location.label} Current
-        </p>
-        <h1 style={{ fontSize: '4rem', lineHeight: '1', color: `var(--risk-${data.risk})`, textTransform: 'capitalize', textShadow: `0 0 32px var(--risk-${data.risk})` }}>
-          {data.risk}
-        </h1>
-      </div>
+    <>
+      <Banners data={data} />
 
-      {/* Glowing Neon Radar */}
-      <div style={{ position: 'relative', width: '100%', maxWidth: '340px', margin: '24px auto' }}>
-        <svg viewBox="0 0 200 200" style={{ filter: 'drop-shadow(0 0 24px rgba(0,0,0,0.5))' }}>
-          <circle cx="100" cy="100" r="98" fill="rgba(0,0,0,0.2)" stroke="var(--glass-border)" strokeWidth="1" />
-          
-          <circle cx="100" cy="100" r="30" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1">
-            <animate attributeName="r" values="30;98" dur="3s" repeatCount="indefinite" />
-            <animate attributeName="opacity" values="1;0" dur="3s" repeatCount="indefinite" />
-          </circle>
-
-          <circle cx="100" cy="100" r="90" fill="none" stroke="var(--text-soft)" strokeWidth="0.5" strokeDasharray="2 4" opacity="0.4" />
-          <circle cx="100" cy="100" r="60" fill="none" stroke="var(--text-soft)" strokeWidth="0.5" strokeDasharray="2 4" opacity="0.4" />
-          <circle cx="100" cy="100" r="30" fill="none" stroke="var(--text-soft)" strokeWidth="0.5" opacity="0.4" />
-          
-          <circle cx="100" cy="100" r="3" fill="#fff" />
-
-          {data.wind && (
-            <g transform={`rotate(${data.wind.from_deg + 180} 100 100)`}>
-              <line x1="100" y1="100" x2="100" y2="15" stroke="var(--text-soft)" strokeWidth="2" strokeDasharray="3 3" opacity="0.8"/>
-              <polygon points="96,22 100,15 104,22" fill="var(--text-soft)" />
-            </g>
-          )}
-
-          {data.sources?.map((source, i) => {
-            const { x, y } = getSvgCoords(source.distance_km, source.bearing_deg);
-            const dotSize = Math.max(4, Math.min(12, source.fire_count / 30)); 
-            return (
-              <g key={i}>
-                <circle cx={x} cy={y} r={dotSize} fill={`var(--risk-${data.risk})`} opacity="0.2">
-                  <animate attributeName="r" values={`${dotSize};${dotSize * 3};${dotSize}`} dur="2s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite" />
-                </circle>
-                <circle cx={x} cy={y} r={dotSize * 0.6} fill={`var(--risk-${data.risk})`} stroke="#000" strokeWidth="2" />
-              </g>
-            );
-          })}
-        </svg>
-      </div>
-
-      {/* Data-Dense Forecast Card */}
-      <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h3 className="text-soft text-sm" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>Forecast</h3>
-          {data.risk === 'none' ? (
-            <p style={{ margin: '4px 0 0 0', fontSize: '1.2rem', fontWeight: 600 }}>Clear Skies</p>
-          ) : (
-            <p style={{ margin: '4px 0 0 0', fontSize: '1.2rem', fontWeight: 600 }}>
-              Arrival in <span style={{ color: `var(--risk-${data.risk})` }}>~{data.arrival_hours}h</span>
-            </p>
-          )}
+      <section className="hero-sec stack" style={{ gap: 6 }}>
+        <div className="row between">
+          <span className="eyebrow row" style={{ gap: 6 }}><PinIcon />{city(data.location?.label)}</span>
+          <span className={`pill risk-${risk}`}>{t('risk_' + risk)}</span>
         </div>
-        {data.risk !== 'none' && (
-          <div style={{ textAlign: 'right' }}>
-            <span className="text-soft text-sm">Window</span>
-            <div style={{ fontWeight: 600 }}>{data.arrival_range_hours?.[0]}h - {data.arrival_range_hours?.[1]}h</div>
-          </div>
+        <h1 className="hero-title">{none ? t('no_smoke') : t(risk === 'low' ? 'arrives_low' : 'arrives_in', { h: data.arrival_hours })}</h1>
+        {!none && range && <p className="text-soft text-sm">{t('arrival_window', { a: range[0], b: range[1] })}</p>}
+        {showSeason && <p className="text-soft text-sm">{t('low_season_note')}</p>}
+      </section>
+
+      <section className="glass-card radar-card">
+        <RadarSvg data={data} risk={risk} />
+        {wind && (
+          <p className="radar-cap">
+            {t('wind_from', { dir: t('dir_' + card8(wind.from_deg)), speed: wind.speed_kmh })}
+          </p>
         )}
-      </div>
+        <p className="radar-cap text-soft">{t('radar_legend')}</p>
+      </section>
 
-      <div className="glass-card">
-        <h3 className="text-soft text-sm" style={{ textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>
-          {data.confidence} Confidence Factors
-        </h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {data.reason_codes?.map((rc, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--text-soft)', marginTop: '8px' }} />
-              <p style={{ margin: 0, lineHeight: 1.5 }}>{t(rc.code, 'en', rc.params)}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      {top && !none && (
+        <section className="glass-card">
+          <span className="eyebrow">{t('where_from')}</span>
+          <div className="srcrow" style={{ marginTop: 6 }}>
+            <strong>{region(top.region_code)}</strong>
+            <span className="text-soft text-sm">{t('fires_n', { n: top.fire_count })} · {top.distance_km} km</span>
+          </div>
+        </section>
+      )}
+
+      <section className="glass-card">
+        <h3 className="card-title">{t('conf_factors', { level: t('conf_' + data.confidence) })}</h3>
+        {(reasons.length > 0 || confReasons.length > 0) && (
+          <ul className="dots">
+            {[...reasons, ...confReasons].map((r, i) => <li key={i}>{r}</li>)}
+          </ul>
+        )}
+        <details className="explain">
+          <summary>{t('conf_what')}</summary>
+          <p style={{ marginTop: 6 }}>{t('conf_explain')}</p>
+        </details>
+      </section>
 
       {data.festival?.active && (
-        <div className="glass-card" style={{ background: 'rgba(168, 85, 247, 0.1)', borderColor: 'rgba(168, 85, 247, 0.3)', borderTopColor: 'rgba(168, 85, 247, 0.6)' }}>
-          <h3 style={{ color: '#d8b4fe', marginBottom: '8px' }}>🎇 Festival Alert: {data.festival.name}</h3>
-          <p className="text-soft" style={{ margin: 0 }}>Local emissions will compound incoming smoke tonight.</p>
-        </div>
+        <section className="glass-card" style={{ borderLeft: '4px solid #8b5cf6' }}>
+          <h3 className="card-title">🎆 {t('festival_title')}</h3>
+          <p className="text-soft text-sm" style={{ marginTop: 4 }}>{t('festival_note', { name: data.festival.name || '' })}</p>
+        </section>
       )}
-    </div>
-  );
+
+      <Link className="btn" to="/day">{t('plan_my_day')} →</Link>
+      <p className="text-soft text-sm" style={{ textAlign: 'center' }}>{t('disclaimer')}</p>
+    </>
+  )
 }

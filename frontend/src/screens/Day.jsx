@@ -1,112 +1,145 @@
-import { useEffect, useState } from 'react';
-import { getDayPlan } from '../api.js';
-import { t } from '../i18n/index.js';
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { getDayPlan, getAudience } from '../lib/api.js'
+import { useApi } from '../lib/useApi.js'
+import { useLang } from '../i18n/useLang.jsx'
+import HourBars from '../components/HourBars.jsx'
+import { Banners, ErrorCard, ScreenSkeleton } from '../components/StateViews.jsx'
+import { fmtHour, fmtRange } from '../lib/time.js'
 
-function getBandColor(band) {
-  const map = { good: 'none', satisfactory: 'low', moderate: 'medium', poor: 'high', very_poor: 'high', severe: 'severe' };
-  return `var(--risk-${map[band] || 'medium'})`;
+const TINT = { windows: 'low', caution: 'medium', stay_in: 'high' }
+const AUD = ['general', 'sensitive', 'child', 'outdoor']
+const SWAPS = {
+  general: ['yoga', 'stairs', 'dance'], sensitive: ['stretch', 'breathing'],
+  child: ['games', 'dance'], outdoor: ['shade', 'shift'],
 }
 
 export default function Day() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { t, tryT, lang } = useLang()
+  const { status, data, reload } = useApi(getDayPlan)
+  const state = data?.day_state
 
   useEffect(() => {
-    getDayPlan('day_windows').then(res => {
-      setData(res);
-      setLoading(false);
-    });
-  }, []);
+    if (!state) return
+    document.body.dataset.risk = TINT[state] || 'low'
+    return () => { delete document.body.dataset.risk }
+  }, [state])
 
-  if (loading) return <div className="screen">Loading day plan...</div>;
-  if (!data) return null;
+  if (status === 'loading') return <ScreenSkeleton />
+  if (!data) return <ErrorCard onRetry={reload} />
+
+  const aud = AUD.includes(data.audience) ? data.audience : AUD.includes(getAudience()) ? getAudience() : 'general'
+  const windows = [...(data.windows || [])].sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99))
+  const top = windows[0]
+  const others = windows.slice(1)
+  const reasonsOf = w => (w.reason_codes || []).map(r => tryT(r.code, r.params)).filter(Boolean)
+  const advice = (data.advice_codes || []).map(c => tryT(c)).filter(Boolean)
+  const miss = data.data_quality?.missing_hours
+  const nMiss = Array.isArray(miss) ? miss.length : Number(miss) || 0
+  const cig = data.cigarette_equiv?.value
+  const bestTime = data.best_hour != null ? fmtHour(data.best_hour, lang) : ''
+  const swaps = SWAPS[aud]
 
   return (
-    <div className="screen">
-      
-      <div style={{ marginTop: '12px' }}>
-        <p className="text-soft" style={{ fontSize: '1rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '4px' }}>
-          {data.audience || 'General'} Profile
-        </p>
-        <h1 style={{ fontSize: '2.5rem' }}>Plan My Day</h1>
-      </div>
+    <>
+      <Banners data={data} />
 
-      {/* Analytics Timeline */}
-      <div className="glass-card" style={{ padding: '24px 16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '20px', padding: '0 8px' }}>
-          <h3 className="text-soft text-sm" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>Hourly PM2.5</h3>
-          <span className="text-soft" style={{ fontSize: '0.75rem' }}>*Estimated</span>
+      <section className="hero-sec stack" style={{ gap: 6 }}>
+        <div className="row between">
+          <span className="pill">{t('aud_' + aud)}</span>
+          <span className="pill">{t('state_' + state)}</span>
         </div>
-        
-        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', paddingHorizontal: '8px', scrollbarWidth: 'none' }}>
-          {data.hours?.map((hour) => (
-            <div key={hour.h} style={{ flex: '0 0 44px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', height: '120px' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: getBandColor(hour.band), marginBottom: '8px', opacity: hour.status === 'stay' ? 0.3 : 1 }}>
-                {hour.pm25}
-              </span>
-              <div 
-                style={{ 
-                  width: '100%',
-                  height: `${Math.max(10, (hour.pm25 / 300) * 80)}px`,
-                  background: getBandColor(hour.band),
-                  borderRadius: '6px',
-                  opacity: hour.status === 'stay' ? 0.3 : 1,
-                  boxShadow: `0 0 12px ${getBandColor(hour.band)}40`
-                }} 
-              />
-              <div className="text-soft" style={{ fontSize: '0.75rem', marginTop: '12px', fontWeight: 600 }}>
-                {hour.h}:00
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+        <h1 className="hero-title">{t('plan_title')}</h1>
+      </section>
 
-      {/* Strategic Advice Cards */}
-      <div className="glass-card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h3 className="text-soft text-sm" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Action Plan
-          </h3>
-          <span style={{ background: 'rgba(255,255,255,0.1)', padding: '4px 12px', borderRadius: '100px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text)' }}>
-            {data.day_state.replace('_', ' ').toUpperCase()}
-          </span>
+      <section className="glass-card">
+        <div className="row between" style={{ marginBottom: 10 }}>
+          <h3 className="card-title">{t('hourly_pm25')}</h3>
+          <span className="text-soft text-sm">*{t('estimated')}</span>
         </div>
-        
-        {data.day_state === 'windows' ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {data.windows?.map((win, i) => (
-              <div key={i} style={{ background: 'rgba(0,0,0,0.2)', padding: '16px', borderRadius: '16px', borderLeft: `4px solid ${getBandColor(win.band)}` }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <strong style={{ fontSize: '1.2rem' }}>{win.start_h}:00 - {win.end_h + 1}:00</strong>
-                  <span className="text-soft text-sm">Rank #{win.rank}</span>
+        <HourBars hours={data.hours} windows={windows} />
+        {state === 'windows' && <p className="text-soft text-sm" style={{ marginTop: 8 }}>{t('legend_window')}</p>}
+        {nMiss > 0 && <p className="text-soft text-sm" style={{ marginTop: 4 }}>{t('missing_note')}</p>}
+      </section>
+
+      {state === 'windows' && top && (
+        <>
+          <section className="glass-card stack" style={{ gap: 8 }}>
+            <span className="eyebrow">{t('best_window')}</span>
+            <div className="win-time">{fmtRange(top.start_h, top.end_h, lang)}</div>
+            <ul className="dots">
+              {reasonsOf(top).map((r, i) => <li key={i}>{r}</li>)}
+              <li>{t('act_go_' + aud)}</li>
+            </ul>
+          </section>
+          {others.length > 0 && (
+            <section className="glass-card stack" style={{ gap: 10 }}>
+              <span className="eyebrow">{t('other_windows')}</span>
+              {others.map((w, i) => (
+                <div key={i} className="win-row">
+                  <div className="row between">
+                    <strong>{fmtRange(w.start_h, w.end_h, lang)}</strong>
+                    <span className="text-soft text-sm">{t('rank', { n: w.rank })}</span>
+                  </div>
+                  <p className="text-soft text-sm">{reasonsOf(w).join(' · ')}</p>
                 </div>
-                <p className="text-soft" style={{ margin: 0, fontSize: '0.9rem', lineHeight: 1.5 }}>
-                  {win.reason_codes?.map(rc => t(rc.code, 'en', rc.params)).join(', ')}
-                </p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(0,0,0,0.2)', padding: '16px', borderRadius: '16px' }}>
-            <div><span className="text-soft text-sm">Best Hour</span><br/><strong style={{fontSize: '1.2rem'}}>{data.best_hour}:00</strong></div>
-            <div style={{textAlign: 'right'}}><span className="text-soft text-sm">Worst Hour</span><br/><strong style={{fontSize: '1.2rem'}}>{data.worst_hour}:00</strong></div>
+              ))}
+            </section>
+          )}
+        </>
+      )}
+
+      {state === 'caution' && (
+        <section className="glass-card stack" style={{ gap: 8 }}>
+          <h3>{t('caution_title')}</h3>
+          <p className="text-soft">{t(aud === 'outdoor' ? 'caution_outdoor' : 'caution_body', { time: bestTime })}</p>
+          <ul className="dots">{reasonsOf({ reason_codes: data.reason_codes }).map((r, i) => <li key={i}>{r}</li>)}</ul>
+        </section>
+      )}
+
+      {state === 'stay_in' && (
+        <section className="glass-card stack" style={{ gap: 8 }}>
+          <h3>{t('stayin_title')}</h3>
+          <p className="text-soft">{t('stayin_body')}</p>
+        </section>
+      )}
+
+      {state !== 'windows' && (
+        <section className="glass-card stack" style={{ gap: 10 }}>
+          <span className="eyebrow">{t('swaps_title')}</span>
+          <ul className="dots">{swaps.map(s => <li key={s}>{t('swap_' + s)}</li>)}</ul>
+        </section>
+      )}
+
+      {advice.length > 0 && (
+        <section className="glass-card stack" style={{ gap: 6 }}>
+          <span className="eyebrow">{t('advice_title')}</span>
+          <ul className="dots">{advice.map((a, i) => <li key={i}>{a}</li>)}</ul>
+        </section>
+      )}
+
+      <div className="row stat-row">
+        <div className="glass-card stat">
+          <b>{data.exposure_avoided_hours ?? '–'}</b>
+          <span className="text-soft text-sm">{t('avoided_long')}</span>
+        </div>
+        {cig != null && (
+          <div className="glass-card stat">
+            <b>≈ {cig}</b>
+            <span className="text-soft text-sm">{t('cigarette_long')}</span>
           </div>
         )}
       </div>
 
-      {/* Impact Chips */}
-      <div style={{ display: 'flex', gap: '12px' }}>
-        <div className="glass-card" style={{ flex: 1, padding: '16px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <span className="text-soft text-sm" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>Avoided</span>
-          <strong style={{ fontSize: '1.5rem', color: 'var(--risk-none)' }}>{data.exposure_avoided_hours}h</strong>
-        </div>
-        <div className="glass-card" style={{ flex: 1, padding: '16px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <span className="text-soft text-sm" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>Equivalent</span>
-          <strong style={{ fontSize: '1.5rem', color: 'var(--risk-medium)' }}>🚬 ~{data.cigarette_equiv?.value}</strong>
-        </div>
-      </div>
+      {state !== 'windows' && (
+        <section className="glass-card stack" style={{ gap: 4 }}>
+          <span className="eyebrow">{t('footprint_title')}</span>
+          <p className="text-soft">{t('footprint_tip')}</p>
+        </section>
+      )}
 
-    </div>
-  );
+      <Link className="btn ghost" to="/">← {t('nav_radar')}</Link>
+      <p className="text-soft text-sm" style={{ textAlign: 'center' }}>{t('disclaimer')}</p>
+    </>
+  )
 }
