@@ -12,7 +12,10 @@ MIN_ALIGN = 0.5
 SPEED_FLOOR = 5.0          # km/h; calm wind => "too slow"
 FIRE_STALE_H = 15          # VIIRS passes roughly every 12 h (about 01:30 and 13:30 local) plus a few hours of latency,
                            # so the playbook's 6 h was too strict: it would mark half of every day "stale".
-RISK_THRESHOLDS = (5, 30, 120)   # none < 5 <= low < 30 <= medium < 120 <= high  (tune on replays)
+# none < 40 <= low < 75 <= medium < 200 <= high.  Calibrated with scripts/tune.py on 3 past events + one calm week;
+# the two backup events were held out and still warned. Original guesses were (5, 30, 120): they raised 6 false
+# alarms in 8 calm mornings. 'high' (200) rests on very few events: treat it as the least reliable number.
+RISK_THRESHOLDS = (40, 75, 200)
 CROP_REGIONS = ("IN-PB", "IN-HR", "IN-UP")
 LEVELS = ["low", "medium", "high"]
 

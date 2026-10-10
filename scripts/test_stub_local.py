@@ -28,8 +28,10 @@ s, b = call(smoke, {"scenario": "smoke_stale"})
 expect("smoke scenario=smoke_stale", s == 200 and b["data_quality"]["stale"] is True)
 s, b = call(smoke, {"scenario": "error"})
 expect("smoke scenario=error -> 503", s == 503 and b["error"]["code"] == "upstream_unavailable")
-s, b = call(smoke, {"replay": "delhi-nov-2025"})
-expect("smoke replay=delhi-nov-2025", s == 200 and b["mode"] == "replay" and not check_response("smoke", b))
+from lib.stub import _events
+_rid = _events()[0]["event_id"]
+s, b = call(smoke, {"replay": _rid})
+expect(f"smoke replay={_rid}", s == 200 and b["mode"] == "replay" and not check_response("smoke", b))
 s, b = call(smoke, {"replay": "bogus"})
 expect("smoke replay=bogus -> 404", s == 404 and b["error"]["code"] == "unknown_replay")
 s, b = call(smoke, {"scenario": "no_such_thing"})

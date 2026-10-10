@@ -1,0 +1,22 @@
+{
+  "note": "Events come from docs/validation-events.md (Person B). cpcb_target is the CPCB-reported spike day, used only if the CAMS series shows no clear jump. 'kind: calm' events are false-alarm checks.",
+  "events": [
+    {"id": "delhi-2024-10", "city": "delhi", "label_key": "replay_delhi_2024_10", "kind": "smoke",
+     "window": ["2024-10-19", "2024-10-24"], "cpcb_target": "2024-10-23T12:00",
+     "note": "early season, few fires; an honest answer is low or medium"},
+    {"id": "delhi-2024-11", "city": "delhi", "label_key": "replay_delhi_2024_11", "kind": "smoke",
+     "window": ["2024-11-10", "2024-11-19"], "cpcb_target": "2024-11-13T12:00",
+     "note": "best smoke-arrival case (first severe day 13 Nov)"},
+    {"id": "lucknow-2023-11", "city": "lucknow", "label_key": "replay_lucknow_2023_11", "kind": "smoke",
+     "window": ["2023-11-01", "2023-11-06"], "cpcb_target": "2023-11-04T12:00",
+     "note": "weak evidence (source does not name smoke); limitation example if no upwind fire pattern"},
+    {"id": "delhi-2024-10-calm", "city": "delhi", "label_key": "replay_delhi_2024_10_calm", "kind": "calm",
+     "window": ["2024-10-04", "2024-10-11"], "note": "calm period inside fire season: false-alarm check"}
+  ],
+  "backups": [
+    {"id": "delhi-2024-10-late", "city": "delhi", "label_key": "replay_delhi_2024_10_late", "kind": "smoke",
+     "window": ["2024-10-26", "2024-11-01"], "cpcb_target": "2024-10-31T12:00"},
+    {"id": "delhi-2025-11", "city": "delhi", "label_key": "replay_delhi_2025_11", "kind": "smoke",
+     "window": ["2025-11-07", "2025-11-12"], "cpcb_target": "2025-11-11T12:00"}
+  ]
+}

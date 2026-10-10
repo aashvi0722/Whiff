@@ -1,0 +1,45 @@
+{
+  "contract_version": 1,
+  "mode": "replay",
+  "replay": {
+    "event_id": "delhi-2024-10",
+    "label_key": "replay_delhi_2024_10",
+    "as_of": "2024-10-22T12:00:00+05:30"
+  },
+  "location": {
+    "lat": 28.61,
+    "lon": 77.21,
+    "label": "Delhi"
+  },
+  "generated_at": "2024-10-22T12:00:00+05:30",
+  "risk": "none",
+  "arrival_hours": null,
+  "arrival_range_hours": null,
+  "confidence": "medium",
+  "confidence_reasons": [],
+  "sources": [],
+  "wind": {
+    "from_deg": 339,
+    "speed_kmh": 7,
+    "steady": false
+  },
+  "festival": {
+    "active": false,
+    "name": null
+  },
+  "reason_codes": [
+    {
+      "code": "smoke_none_upwind",
+      "params": {}
+    },
+    {
+      "code": "wind_calm_trapping",
+      "params": {}
+    }
+  ],
+  "data_quality": {
+    "fires_age_hours": 9,
+    "stale": false,
+    "served_from": "replay"
+  }
+}
