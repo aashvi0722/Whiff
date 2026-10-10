@@ -1,4 +1,6 @@
 import { useLang } from '../i18n/useLang.jsx'
+import { USE_MOCK } from '../lib/api.js'
+import { replayLabelKey, isLimitation, clearReplay } from '../lib/replay.js'
 
 export function ScreenSkeleton() {
   const { t } = useLang()
@@ -24,13 +26,26 @@ export function ErrorCard({ onRetry }) {
 }
 
 export function Banners({ data }) {
-  const { t } = useLang()
+  const { t, tryT, lang } = useLang()
   const stale = data?._stale || data?.data_quality?.stale
+  const r = data?.replay
+  const label = r ? tryT(replayLabelKey(r)) : null
+  const asOf = r?.as_of
+    ? new Date(r.as_of).toLocaleDateString(lang === 'hi' ? 'hi-IN' : 'en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    : ''
   return (
     <>
+      {USE_MOCK && <div className="banner stale">🧪 {t('mock_banner')}</div>}
       {data?.mode === 'replay' && (
-        <div className="banner replay">
-          ⏪ {t('replay_banner')}{data.replay?.label ? ` · ${data.replay.label}` : ''}
+        <div className="banner replay" role="status">
+          <div>
+            <div>⏪ {t('replay_banner')}{label ? ` · ${label}` : ''}</div>
+            {asOf && <div style={{ fontWeight: 500, fontSize: '.78rem' }}>{t('replay_as_of', { date: asOf })}</div>}
+            {isLimitation(r?.event_id) && (
+              <div style={{ fontWeight: 500, fontSize: '.78rem' }}>⚠ {t('replay_limit_tag')}: {t('replay_limit_note')}</div>
+            )}
+          </div>
+          <button className="chip" style={{ marginLeft: 'auto' }} onClick={clearReplay}>{t('replay_exit')}</button>
         </div>
       )}
       {stale && <div className="banner stale">⏱ {t('stale')}</div>}

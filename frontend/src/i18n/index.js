@@ -77,6 +77,11 @@ geo_unsupported:'This browser can’t share your location. Pick a city above.',
 location_note:'Your location is sent to our server only to find fires and wind near you, and saved on this device.',
 arrives_low:'Some light smoke may reach you in about {h}\u00A0hours',
 arrival_window:'Likely between {a} and {b} hours',
+replay_delhi_2024_10:'Delhi, October 2024', replay_delhi_2024_11:'Delhi, November 2024', replay_lucknow_2023_11:'Lucknow, November 2023',
+replay_pick_title:'Watch a past smoke event',
+replay_pick_hint:'See how Whiff would have looked during a real past event. Replays use saved data and are not live.',
+replay_exit:'Back to live', replay_as_of:'As of {date}',
+replay_limit_tag:'Limitation example', replay_limit_note:'Weak evidence for this event. Shown on purpose to be honest about what the model cannot prove.',
   },
   hi: {
     theme: 'थीम', theme_auto: 'ऑटो', theme_light: 'लाइट', theme_dark: 'डार्क',
@@ -150,6 +155,11 @@ geo_unsupported:'यह ब्राउज़र आपकी जगह सा�
 location_note:'आपकी जगह सिर्फ़ आपके पास की आग और हवा का पता लगाने के लिए हमारे सर्वर को भेजी जाती है, और इसी डिवाइस पर सहेजी जाती है।',
 arrives_low:'हल्का धुआं लगभग {h}\u00A0घंटे में पहुँच सकता है',
 arrival_window:'संभावित समय {a} से {b} घंटे के बीच',
+replay_delhi_2024_10:'दिल्ली, अक्टूबर 2024', replay_delhi_2024_11:'दिल्ली, नवंबर 2024', replay_lucknow_2023_11:'लखनऊ, नवंबर 2023',
+replay_pick_title:'पुरानी धुएं की घटना देखें',
+replay_pick_hint:'देखें कि किसी असली पुरानी घटना के दौरान Whiff कैसा दिखता। रीप्ले सहेजे हुए डेटा पर आधारित हैं, लाइव नहीं।',
+replay_exit:'लाइव पर वापस', replay_as_of:'{date} तक की स्थिति',
+replay_limit_tag:'सीमा का उदाहरण', replay_limit_note:'इस घटना के प्रमाण कमज़ोर हैं। यह जानबूझकर दिखाया गया है कि मॉडल क्या साबित नहीं कर सकता।',
   },
 }
 

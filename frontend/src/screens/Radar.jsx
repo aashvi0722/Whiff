@@ -1,3 +1,4 @@
+import ReplayPicker from '../components/ReplayPicker.jsx'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getSmokeRadar } from '../lib/api.js'
@@ -89,6 +90,8 @@ export default function Radar() {
           <p className="text-soft text-sm" style={{ marginTop: 4 }}>{t('festival_note', { name: data.festival.name || '' })}</p>
         </section>
       )}
+
+      <ReplayPicker />
 
       <Link className="btn" to="/day">{t('plan_my_day')} →</Link>
       <p className="text-soft text-sm" style={{ textAlign: 'center' }}>{t('disclaimer')}</p>
