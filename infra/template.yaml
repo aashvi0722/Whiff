@@ -98,7 +98,8 @@ Resources:
             Schedule: rate(1 hour)
             Description: Hourly refresh of fire clusters and per-city results
 
-  # ---------- Frontend hosting: private S3 bucket served by CloudFront over HTTPS ----------
+  # ---------- Frontend hosting: private S3 bucket, served over the same HTTPS API by AppFn ----------
+  # (CloudFront was tried first, but new AWS accounts must be verified by AWS Support before they may create distributions.)
   FrontendBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -108,66 +109,36 @@ Resources:
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
 
-  FrontendOac:
-    Type: AWS::CloudFront::OriginAccessControl
+  AppFn:
+    Type: AWS::Serverless::Function
     Properties:
-      OriginAccessControlConfig:
-        Name: !Sub '${AWS::StackName}-frontend-oac'
-        OriginAccessControlOriginType: s3
-        SigningBehavior: always
-        SigningProtocol: sigv4
-
-  FrontendDistribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Enabled: true
-        Comment: Whiff frontend
-        DefaultRootObject: index.html
-        HttpVersion: http2and3
-        Origins:
-          - Id: s3-frontend
-            DomainName: !GetAtt FrontendBucket.RegionalDomainName
-            OriginAccessControlId: !GetAtt FrontendOac.Id
-            S3OriginConfig:
-              OriginAccessIdentity: ''
-        DefaultCacheBehavior:
-          TargetOriginId: s3-frontend
-          ViewerProtocolPolicy: redirect-to-https
-          AllowedMethods: [GET, HEAD]
-          Compress: true
-          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6   # managed: CachingOptimized
-        CustomErrorResponses:   # single-page app: unknown paths load index.html
-          - ErrorCode: 403
-            ResponseCode: 200
-            ResponsePagePath: /index.html
-            ErrorCachingMinTTL: 0
-          - ErrorCode: 404
-            ResponseCode: 200
-            ResponsePagePath: /index.html
-            ErrorCachingMinTTL: 0
-
-  FrontendBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref FrontendBucket
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal: {Service: cloudfront.amazonaws.com}
-            Action: s3:GetObject
-            Resource: !Sub '${FrontendBucket.Arn}/*'
-            Condition:
-              StringEquals:
-                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${FrontendDistribution}'
+      CodeUri: ../backend/
+      Handler: app.handler
+      Timeout: 10
+      Environment:
+        Variables:
+          BUCKET: !Ref FrontendBucket
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref FrontendBucket
+      Events:
+        Root:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref WhiffApi
+            Path: /
+            Method: GET
+        Proxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref WhiffApi
+            Path: /{proxy+}
+            Method: GET
 
 Outputs:
   ApiUrl:
     Value: !Sub 'https://${WhiffApi}.execute-api.${AWS::Region}.amazonaws.com'
   FrontendUrl:
-    Value: !Sub 'https://${FrontendDistribution.DomainName}'
+    Value: !Sub 'https://${WhiffApi}.execute-api.${AWS::Region}.amazonaws.com/'
   FrontendBucket:
     Value: !Ref FrontendBucket
-  FrontendDistributionId:
-    Value: !Ref FrontendDistribution
