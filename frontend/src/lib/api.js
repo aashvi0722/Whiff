@@ -88,7 +88,7 @@ export function getHistory({ lat, lon, days = 7, scenario } = {}) {
   return call('history', '/history', 'history', { lat: lat ?? c.lat, lon: lon ?? c.lon, days, scenario })
 }
 export function getReplays({ scenario } = {}) {
-  return call('replays', '/replays', 'replays', { scenario })
+  return call('replays', '/replays', 'replays', { scenario, replay: '' })
 }
 
 // no-argument versions that the screens call
