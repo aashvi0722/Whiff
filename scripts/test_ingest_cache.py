@@ -38,8 +38,9 @@ def fake_json(url, timeout=8):
     calls["aq"] += 1
     if state["weather_down"]:
         raise weather.WeatherError("down")
-    d = date(2026, 10, 9).isoformat()
-    return {"hourly": {"time": [f"{d}T{h:02d}:00" for h in range(24)], "pm2_5": [40.0] * 24, "pm10": [60.0] * 24}}
+    days = sorted({date(2026, 10, 9), datetime.now(IST).date()})   # the fixed test date and the real "today" the ingest asks for
+    times = [f"{d.isoformat()}T{h:02d}:00" for d in days for h in range(24)]
+    return {"hourly": {"time": times, "pm2_5": [40.0] * len(times), "pm10": [60.0] * len(times)}}
 firms.fetch_fires, weather.fetch_wind, weather.fetch_json = fake_fires, fake_wind, fake_json
 
 def reset():

@@ -1,0 +1,71 @@
+{
+  "contract_version": 1,
+  "mode": "replay",
+  "replay": {
+    "event_id": "lucknow-2023-11",
+    "label_key": "replay_lucknow_2023_11",
+    "as_of": "2023-11-03T12:00:00+05:30"
+  },
+  "location": {
+    "lat": 26.85,
+    "lon": 80.95,
+    "label": "Lucknow"
+  },
+  "generated_at": "2023-11-03T12:00:00+05:30",
+  "risk": "low",
+  "arrival_hours": 35,
+  "arrival_range_hours": [
+    23,
+    44
+  ],
+  "confidence": "medium",
+  "confidence_reasons": [
+    "wind_steady",
+    "fires_steady"
+  ],
+  "sources": [
+    {
+      "type": "unknown",
+      "region_code": "IN",
+      "fire_count": 72,
+      "distance_km": 174,
+      "bearing_deg": 269,
+      "travel_hours": 35
+    },
+    {
+      "type": "crop_residue_likely",
+      "region_code": "IN-UP",
+      "fire_count": 7,
+      "distance_km": 197,
+      "bearing_deg": 265,
+      "travel_hours": 34
+    }
+  ],
+  "wind": {
+    "from_deg": 291,
+    "speed_kmh": 7,
+    "steady": true
+  },
+  "festival": {
+    "active": false,
+    "name": null
+  },
+  "reason_codes": [
+    {
+      "code": "smoke_aligned_fires",
+      "params": {
+        "count": 79,
+        "km": 176
+      }
+    },
+    {
+      "code": "wind_calm_trapping",
+      "params": {}
+    }
+  ],
+  "data_quality": {
+    "fires_age_hours": 9,
+    "stale": false,
+    "served_from": "replay"
+  }
+}

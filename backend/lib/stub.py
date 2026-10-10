@@ -30,8 +30,14 @@ def respond(status, body):
     }
 
 
+def _events():
+    """Real saved replays if any exist, otherwise the contract sample list."""
+    from . import replays
+    return replays.list_events() or load_sample("replays")["events"]
+
+
 def _known_replay_ids():
-    return {e["event_id"] for e in load_sample("replays")["events"]}
+    return {e["event_id"] for e in _events()}
 
 
 def serve(event, kind, default):
@@ -46,6 +52,10 @@ def serve(event, kind, default):
     if replay and kind in ("smoke", "day"):
         if replay not in _known_replay_ids():
             return respond(404, {"contract_version": 1, "error": {"code": "unknown_replay"}})
+        from . import replays
+        saved = replays.load(replay, kind)
+        if saved is not None:
+            return respond(200, saved)
         if kind == "smoke":
             default = "smoke_replay"
 

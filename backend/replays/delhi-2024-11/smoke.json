@@ -1,0 +1,80 @@
+{
+  "contract_version": 1,
+  "mode": "replay",
+  "replay": {
+    "event_id": "delhi-2024-11",
+    "label_key": "replay_delhi_2024_11",
+    "as_of": "2024-11-12T12:00:00+05:30"
+  },
+  "location": {
+    "lat": 28.61,
+    "lon": 77.21,
+    "label": "Delhi"
+  },
+  "generated_at": "2024-11-12T12:00:00+05:30",
+  "risk": "high",
+  "arrival_hours": 37,
+  "arrival_range_hours": [
+    33,
+    44
+  ],
+  "confidence": "low",
+  "confidence_reasons": [
+    "wind_steady",
+    "fires_rising",
+    "arrival_far"
+  ],
+  "sources": [
+    {
+      "type": "crop_residue_likely",
+      "region_code": "IN-PB",
+      "fire_count": 322,
+      "distance_km": 233,
+      "bearing_deg": 316,
+      "travel_hours": 37
+    },
+    {
+      "type": "unknown",
+      "region_code": "IN",
+      "fire_count": 31,
+      "distance_km": 302,
+      "bearing_deg": 286,
+      "travel_hours": 48
+    },
+    {
+      "type": "crop_residue_likely",
+      "region_code": "IN-HR",
+      "fire_count": 20,
+      "distance_km": 142,
+      "bearing_deg": 307,
+      "travel_hours": 21
+    }
+  ],
+  "wind": {
+    "from_deg": 296,
+    "speed_kmh": 7,
+    "steady": true
+  },
+  "festival": {
+    "active": false,
+    "name": null
+  },
+  "reason_codes": [
+    {
+      "code": "smoke_aligned_fires",
+      "params": {
+        "count": 373,
+        "km": 232
+      }
+    },
+    {
+      "code": "wind_calm_trapping",
+      "params": {}
+    }
+  ],
+  "data_quality": {
+    "fires_age_hours": 9,
+    "stale": false,
+    "served_from": "replay"
+  }
+}
