@@ -2,47 +2,49 @@
 
 Whiff is built on open data, open-source software and open fonts. Thank you to everyone who makes them available.
 
-> **Before submitting:** the wording and licence terms below are my best understanding. Open each link and confirm the required attribution text. Items marked **[verify]** are the ones to check.
-
 ## Data
 
-| Source | What we use it for | Attribution / licence |
+| Source | What we use it for | Credit |
 |---|---|---|
-| **NASA FIRMS** (Fire Information for Resource Management System, part of NASA's Earth Science Data and Information System) | Satellite fire detections (VIIRS) | Data and imagery from NASA FIRMS, https://firms.modaps.eosdis.nasa.gov/ . **[verify exact acknowledgement wording on the FIRMS site]** |
-| **Open-Meteo** | Wind and air-quality forecasts, and archived weather | Weather data by Open-Meteo.com, https://open-meteo.com/ , licensed CC BY 4.0. **[verify the free tier is allowed for our use and the required wording]** |
-| **CAMS** (Copernicus Atmosphere Monitoring Service), via Open-Meteo | Air-quality model data and archives | Contains Copernicus Atmosphere Monitoring Service information. **[verify required wording on the Open-Meteo / Copernicus licence pages]** |
-| **CPCB** (Central Pollution Control Board, India) | Daily Delhi-NCR air-quality bulletins used to choose and check past events | https://cpcb.nic.in/ . Public bulletins, cited as sources. **[verify terms of use for government data]** |
-| **IITM / SAFAR estimates**, as printed in CPCB bulletins and news reports | Stubble-burning share figures quoted in validation notes | Quoted with their source for context only; estimates differ between sources. |
+| **NASA FIRMS** | Satellite active-fire detections (VIIRS: S-NPP, NOAA-20, NOAA-21; the archive for replays has S-NPP and NOAA-20) | We acknowledge the use of data and/or imagery from NASA's Fire Information for Resource Management System (FIRMS), https://earthdata.nasa.gov/firms , part of NASA's Earth Science Data and Information System (ESDIS). |
+| **Open-Meteo** | Wind forecasts (10 m and 850 hPa), archived wind, and air-quality data | Weather data by Open-Meteo.com, https://open-meteo.com/ , licensed CC BY 4.0. Used on the free, non-commercial tier. |
+| **Copernicus Atmosphere Monitoring Service (CAMS)**, via Open-Meteo | Modelled PM2.5 and PM10 (global model, about 45 km) | Contains modified Copernicus Atmosphere Monitoring Service information. |
+| **CPCB** (Central Pollution Control Board, India) | The National AQI categories and PM2.5 / PM10 breakpoints used for AQI bands, and daily Delhi-NCR bulletins used to choose and check past events | https://cpcb.nic.in/ and https://caqm.nic.in/ . Public information, cited as sources. |
+| **Berkeley Earth** | The rule of thumb that about 22 µg/m³ of PM2.5 over a day is comparable to one cigarette | https://berkeleyearth.org/air-pollution-and-cigarette-equivalence . A rough comparison, not a medical measure. |
+| **IITM / SAFAR estimates**, as printed in CPCB bulletins and news reports | Stubble-burning share figures quoted in the validation notes | Quoted with their source for context only. Estimates differ between sources. |
 
-Supporting news and government sources for the validation events are linked in `docs/validation-events.md`.
+News and government sources for each validation event are linked in [docs/validation-events.md](docs/validation-events.md).
 
-## Software
+## Software (frontend)
 
-| Library | Licence |
-|---|---|
-| React, React DOM | MIT |
-| React Router | MIT |
-| Vite | MIT |
-| vite-plugin-pwa (with Workbox) | MIT |
-| html-to-image (if used for the share card) | **[verify licence and that it was installed]** |
+| Library | Version | Licence |
+|---|---|---|
+| React and React DOM | 19 | MIT |
+| React Router | 7 | MIT |
+| html-to-image (Air Wrapped share card) | 1.11 | MIT |
+| Vite and @vitejs/plugin-react | 8 and 6 | MIT |
+| vite-plugin-pwa (uses Workbox) | 2 | MIT |
+| ESLint and its React plugins (development only) | | MIT |
 
-The full list, with exact versions, is in `frontend/package.json` and `frontend/package-lock.json`.
+Exact versions are in `frontend/package.json` and `frontend/package-lock.json`. Backend tools are listed in the backend files.
 
 ## Fonts
 
-| Font | Licence |
-|---|---|
-| Montserrat, via Fontsource | SIL Open Font License 1.1 |
-| Noto Sans Devanagari, via Fontsource | SIL Open Font License 1.1 |
+| Font | Packaged by | Licence |
+|---|---|---|
+| Montserrat | Fontsource | SIL Open Font License 1.1 |
+| Noto Sans Devanagari | Fontsource | SIL Open Font License 1.1 |
 
-## Icons and graphics
+Both fonts are bundled with the app, not loaded from a font server.
 
-All icons are simple inline SVG drawn for this project. [B: update if any external icon set is added.]
+## Icons, logo and design
+
+All icons, the logo and the radar are SVG or PNG artwork drawn for this project. The glass-style look was inspired by public design references (pastel and glassmorphism app designs, weather icon sets). No artwork from those references was copied or used.
 
 ## AI tools
 
-Claude (Anthropic) was used for planning, drafting code, documentation and researching data sources. The team ran, tested, edited and takes responsibility for everything submitted.
+Claude (Anthropic) was used for planning, drafting code, UI, icon and logo design help, writing documentation, drafting Hindi text and researching data sources. The team ran, tested and edited everything, and takes responsibility for what is submitted.
 
 ## Hosting
 
-Amazon Web Services. [A: list the services actually used.]
+Amazon Web Services: API Gateway (HTTP API), AWS Lambda, Amazon EventBridge, Amazon DynamoDB, Amazon S3, and AWS SAM / CloudFormation for deployment. Details are in [docs/architecture.md](docs/architecture.md).
