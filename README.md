@@ -7,7 +7,7 @@ Whiff is an installable web app (PWA) that shows where smoke from crop-residue a
 |  |  |
 |---|---|
 | **Live app** | https://x5kcojkqsb.execute-api.ap-south-1.amazonaws.com/ |
-| **Demo video** | [Add YouTube link here] |
+| **Demo video** | https://youtu.be/P2iVrkT1hGs |
 | **Built for** | WeMakeDevs x AWS Bharat Builds Tour, Environmental Hacks (Air track) |
 
 > General guidance, not medical advice. People with health conditions should follow their doctor's advice.
