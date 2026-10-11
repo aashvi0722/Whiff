@@ -1,7 +1,7 @@
 import ReplayPicker from '../components/ReplayPicker.jsx'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { getSmokeRadar, getDayPlan } from '../lib/api.js'
+import { getSmokeRadar, getDayPlan, getCity } from '../lib/api.js'
 import { useApi } from '../lib/useApi.js'
 import { useLang } from '../i18n/useLang.jsx'
 import RadarSvg from '../components/RadarSvg.jsx'
@@ -46,7 +46,7 @@ export default function Radar() {
 
       <section className="hero-sec stack" style={{ gap: 6 }}>
         <div className="row between">
-          <span className="eyebrow row" style={{ gap: 6 }}><PinIcon />{city(data.location?.label)}</span>
+          <span className="eyebrow row" style={{ gap: 6 }}><PinIcon />   {getCity().custom && data.location?.label && data.location.label !== 'Your location' ? t('near_city', { city: city(data.location.label) }) : city(data.location?.label)}</span>
           <span className={`pill risk-${risk}`}>{t('risk_' + risk)}</span>
         </div>
    <div className="row between">
