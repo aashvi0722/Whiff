@@ -1,0 +1,71 @@
+/* ===== UI REVAMP: pastel light + violet/orange dark =====
+   Imported AFTER index.css, so it overrides it. Colours and shapes only.
+   Roll back: delete the `import './revamp.css'` line in main.jsx. */
+:root{
+  --text:#1f1b3a; --text-soft:#5f5980;
+  --accent1:#6d5ce8; --accent2:#a855f7;
+  --grad:linear-gradient(135deg,#6d5ce8,#a855f7);
+  --radius:30px; --space:20px;
+  --base:#f5f1ff; --orb1:#d9ccff; --orb2:#bfe3ff; --orb3:#ffd9ec; --orb4:#ffe6c7;
+}
+.screen{gap:16px}
+.title{font-size:2rem}
+html[lang="hi"] .title{line-height:1.3}
+.hero-title{font-size:1.9rem}
+html[lang="hi"] .hero-title{font-size:1.65rem}
+.aqi-num{font-size:3.4rem}
+.win-time{font-size:2.1rem}
+html[lang="hi"] .win-time{font-size:1.7rem}
+.stat b{font-size:1.9rem}
+
+/* cards */
+.glass-card,.glass{padding:20px;
+  background:linear-gradient(160deg,rgba(255,255,255,.84),rgba(255,255,255,.46));
+  border:1px solid rgba(255,255,255,.95);
+  box-shadow:inset 0 1px 0 #fff,0 18px 40px rgba(109,92,232,.14)}
+.win-row,.chip,.field,.dd-btn,.opt-ic{border-radius:20px}
+.chip{border-radius:99px}
+
+/* buttons, selected states, tick marks: one violet gradient */
+.btn,.chip.on,.opt-tick,.dot.ok,.avatar{background:var(--grad)}
+.btn{box-shadow:inset 0 1.5px 1px rgba(255,255,255,.45),0 12px 26px rgba(109,92,232,.38)}
+.avatar{box-shadow:inset 0 1.5px 1px rgba(255,255,255,.45),0 10px 24px rgba(109,92,232,.32)}
+button.opt.on{box-shadow:inset 0 1.5px 1px rgba(255,255,255,.95),0 0 0 2px color-mix(in srgb,var(--accent1) 60%,transparent),0 12px 30px rgba(109,92,232,.22)}
+.dd-opt:hover,.dd-opt:focus-visible{background:rgba(109,92,232,.1)}
+.dd-opt.on{background:rgba(109,92,232,.16)}
+.logo{color:#6d5ce8}
+
+/* floating pill nav with a filled active tab */
+.nav{border-radius:34px;padding:7px;gap:6px;box-shadow:inset 0 1.5px 1px #fff,0 16px 40px rgba(109,92,232,.22)}
+.nav a{border-radius:28px;padding:10px 0 9px}
+.nav a.active{color:#fff;background:var(--grad);box-shadow:0 8px 18px rgba(109,92,232,.4),inset 0 1px 1px rgba(255,255,255,.4)}
+
+/* Air Wrapped card (exported as an image) */
+.wrap-card{background:radial-gradient(circle at 12% 8%,#7c3aed,transparent 52%),radial-gradient(circle at 92% 92%,#ea580c,transparent 50%),#150d2e}
+.wc-big{background:linear-gradient(135deg,#fdba74,#f9a8d4);-webkit-background-clip:text;background-clip:text}
+
+/* glass icon beside the hero text */
+.hero-ic{flex:none;width:56px;height:56px}
+
+/* ===== DARK: black + deep violet with orange glow ===== */
+html[data-theme="dark"]{
+  --text:#f3efff; --text-soft:#a79fc8;
+  --accent1:#a78bfa; --accent2:#fb923c;
+  --grad:linear-gradient(135deg,#7c3aed,#a855f7);
+  --base:#0a0612; --orb1:#5b21b6; --orb2:#7c2d12; --orb3:#3b0764; --orb4:#9a3412;
+}
+/* clean/low risk keep the violet look (medium/high keep their warm tints from index.css) */
+html[data-theme="dark"] body[data-risk="none"]{--base:#0a0612;--orb1:#5b21b6;--orb2:#0f766e;--orb3:#3b0764;--orb4:#9a3412}
+html[data-theme="dark"] body[data-risk="low"]{--base:#0c0814;--orb1:#5b21b6;--orb2:#4d7c0f;--orb3:#3b0764;--orb4:#854d0e}
+html[data-theme="dark"] .glass-card,html[data-theme="dark"] .glass{
+  background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 18px 40px rgba(0,0,0,.5)}
+html[data-theme="dark"] .chip.on{background:var(--grad);color:#fff}
+html[data-theme="dark"] .logo{color:#c4b5fd}
+html[data-theme="dark"] .nav a.active{color:#fff;background:var(--grad);box-shadow:0 8px 20px rgba(124,58,237,.5),inset 0 1px 1px rgba(255,255,255,.35)}
+html[data-theme="dark"] .dd-opt.on{background:rgba(167,139,250,.2)}
+
+/* streak link row: stack the link above the honor note */
+.row.between:has(>a.text-sm){flex-direction:column;align-items:flex-start;gap:6px}
+.row a.text-sm{white-space:nowrap}

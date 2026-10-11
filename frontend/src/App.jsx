@@ -8,6 +8,7 @@ import Streak from './screens/Streak.jsx'
 import Wrapped from './screens/Wrapped.jsx'
 import Onboarding from './screens/Onboarding.jsx'
 import { useProfile } from './lib/profile.js'
+import NudgeWatcher from './components/NudgeWatcher.jsx'
 
 const FlameIcon = () => <Icon><path d="M12 2c1 4 5 6 5 11a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-4-1-6 1-10z" /></Icon>
 const Icon = ({ children }) => <svg className="ni" viewBox="0 0 24 24" aria-hidden="true">{children}</svg>
@@ -45,6 +46,7 @@ function Shell() {
   return (
     <div className="app">
       <TopBar />
+      <NudgeWatcher />
       <main className="screen">
         <Routes>
           <Route path="/" element={<Radar />} />
