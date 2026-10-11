@@ -1,11 +1,12 @@
 import ReplayPicker from '../components/ReplayPicker.jsx'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { getSmokeRadar } from '../lib/api.js'
+import { getSmokeRadar, getDayPlan } from '../lib/api.js'
 import { useApi } from '../lib/useApi.js'
 import { useLang } from '../i18n/useLang.jsx'
 import RadarSvg from '../components/RadarSvg.jsx'
 import { Banners, ErrorCard, ScreenSkeleton } from '../components/StateViews.jsx'
+import AqiCard from '../components/AqiCard.jsx'
 
 const card8 = deg => ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(deg / 45) % 8]
 // Shown only in the first part of burning season. Delete this line's usage when the season is underway.
@@ -18,6 +19,7 @@ const PinIcon = () => (
 export default function Radar() {
   const { t, tryT, city, region } = useLang()
   const { status, data, reload } = useApi(getSmokeRadar)
+  const dayQ = useApi(getDayPlan)
 
   const risk = ['none', 'low', 'medium', 'high'].includes(data?.risk) ? data.risk : 'low'
   useEffect(() => {
@@ -60,6 +62,8 @@ export default function Radar() {
         )}
         <p className="radar-cap text-soft">{t('radar_legend')}</p>
       </section>
+
+      <AqiCard day={dayQ.data} replay={data.mode === 'replay'} />
 
       {top && !none && (
         <section className="glass-card">

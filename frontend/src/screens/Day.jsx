@@ -6,6 +6,7 @@ import { useLang } from '../i18n/useLang.jsx'
 import HourBars from '../components/HourBars.jsx'
 import { Banners, ErrorCard, ScreenSkeleton } from '../components/StateViews.jsx'
 import { fmtHour, fmtRange } from '../lib/time.js'
+import CheckIn from '../components/CheckIn.jsx'
 
 const TINT = { windows: 'low', caution: 'medium', stay_in: 'high' }
 const AUD = ['general', 'sensitive', 'child', 'outdoor']
@@ -117,6 +118,8 @@ export default function Day() {
           <ul className="dots">{advice.map((a, i) => <li key={i}>{a}</li>)}</ul>
         </section>
       )}
+
+      <CheckIn data={data} />
 
       <div className="row stat-row">
         <div className="glass-card stat">
