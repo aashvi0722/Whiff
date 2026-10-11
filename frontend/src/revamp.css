@@ -86,3 +86,6 @@ html[data-theme="dark"] .dd-opt.on{background:rgba(167,139,250,.2)}
 .glass-card,.glass{background:rgba(255,255,255,.58);border-color:rgba(255,255,255,.95)}
 .chip,.btn.ghost,.field,.dd-btn{background:rgba(109,92,232,.08);border:1px solid rgba(109,92,232,.2);box-shadow:none}
 .chip.on{background:var(--grad);border-color:transparent;background-origin:border-box}
+
+.logo,html[data-theme="dark"] .logo{background:var(--grad);border:0;box-shadow:inset 0 1.5px 1px rgba(255,255,255,.45),0 8px 18px rgba(109,92,232,.35)}
+.logo svg{width:24px;height:24px}
