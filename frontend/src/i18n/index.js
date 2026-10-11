@@ -71,7 +71,7 @@ avoided_long:'hours of poorer air you can skip today', cigarette_long:'cigarette
 missing_note:'Some hours are unavailable.', footprint_title:'Small step for cleaner air',
 footprint_tip:'Don’t burn waste or leaves, and share a ride when you can.', advice_title:'Also helpful',
 profile_hint:'Tune the advice to you. Your choices are saved on this device.', who_for:'Who is this for?',
-location_title:'Your location', my_location:'My location', use_location:'Use my location',
+location_title:'Your location', my_location:'My location', use_location:'Use my location', near_city:'Near {city}', ground_link:'See official ground readings (CPCB)',
 geo_denied:'Location is blocked. Pick a city above, or allow location in your browser settings.',
 geo_unsupported:'This browser can’t share your location. Pick a city above.',
 location_note:'Your location is sent to our server only to find fires and wind near you, and saved on this device.',

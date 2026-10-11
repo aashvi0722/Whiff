@@ -34,6 +34,7 @@ export default function AqiCard({ day, replay }) {
         ))}
       </div>
       <p className="text-soft text-sm">{t('aqi_note')}</p>
+        <a className="text-sm" href="https://airquality.cpcb.gov.in/ccr/#/" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600 }}>{t('ground_link')} ↗</a>
     </section>
   )
 }

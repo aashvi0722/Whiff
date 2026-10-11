@@ -23,9 +23,7 @@ function TopBar() {
     <header className="topbar">
       <div className="brand">
         <span className="logo">
-          <svg viewBox="8 12 48 40" aria-hidden="true">
-  <path d="M14 40c8 0 8-8 16-8s8 8 16 8M14 28c8 0 8-8 16-8s8 8 16 8" fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" />
-</svg>
+            <img src="/icon-192.png" alt="" width="36" height="36" />
         </span>
         <span className="brand-name">Whiff</span>
       </div>
