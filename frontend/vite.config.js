@@ -22,17 +22,14 @@ export default defineConfig({
         name: 'Whiff',
         short_name: 'Whiff',
         description: 'Know when the smoke is coming.',
-        theme_color: '#dff7f2',
-        background_color: '#e2f8f4',
+        theme_color: '#f5f1ff',
+        background_color: '#f5f1ff',
         display: 'standalone',
-        icons: [
-          {
-            src: '/favicon.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
-            purpose: 'any maskable',
-          },
-        ],
+           icons: [
+     { src: '/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+     { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+     { src: '/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+   ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],

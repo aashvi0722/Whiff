@@ -7,6 +7,7 @@ import { useLang } from '../i18n/useLang.jsx'
 import RadarSvg from '../components/RadarSvg.jsx'
 import { Banners, ErrorCard, ScreenSkeleton } from '../components/StateViews.jsx'
 import AqiCard from '../components/AqiCard.jsx'
+import GlassIcon from '../components/GlassIcon.jsx'
 
 const card8 = deg => ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(deg / 45) % 8]
 // Shown only in the first part of burning season. Delete this line's usage when the season is underway.
@@ -48,7 +49,10 @@ export default function Radar() {
           <span className="eyebrow row" style={{ gap: 6 }}><PinIcon />{city(data.location?.label)}</span>
           <span className={`pill risk-${risk}`}>{t('risk_' + risk)}</span>
         </div>
-        <h1 className="hero-title">{none ? t('no_smoke') : t(risk === 'low' ? 'arrives_low' : 'arrives_in', { h: data.arrival_hours })}</h1>
+   <div className="row between">
+     <h1 className="hero-title">{none ? t('no_smoke') : t(risk === 'low' ? 'arrives_low' : 'arrives_in', { h: data.arrival_hours })}</h1>
+     <GlassIcon type={none ? 'clear_air' : 'smoke'} size={56} />
+   </div>
         {!none && range && <p className="text-soft text-sm">{t('arrival_window', { a: range[0], b: range[1] })}</p>}
         {showSeason && <p className="text-soft text-sm">{t('low_season_note')}</p>}
       </section>

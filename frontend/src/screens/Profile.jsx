@@ -4,6 +4,7 @@ import { useProfile, saveProfile } from '../lib/profile.js'
 import AudienceCards, { AUD } from '../components/AudienceCards.jsx'
 import LocationCard from '../components/LocationCard.jsx'
 import ThemeCard from '../components/ThemeCard.jsx'
+import NotifyCard from '../components/NotifyCard.jsx'
 
 export default function Profile() {
   const { t } = useLang()
@@ -59,7 +60,7 @@ export default function Profile() {
         </>
       )}
 
-      {step !== 'edit' && <><LocationCard /><ThemeCard /></>}
+      {step !== 'edit' && <><LocationCard /><NotifyCard /><ThemeCard /></>}
       <p className="text-soft text-sm" style={{ textAlign: 'center' }}>{t('disclaimer')}</p>
     </>
   )
