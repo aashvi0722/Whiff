@@ -69,3 +69,20 @@ html[data-theme="dark"] .dd-opt.on{background:rgba(167,139,250,.2)}
 /* streak link row: stack the link above the honor note */
 .row.between:has(>a.text-sm){flex-direction:column;align-items:flex-start;gap:6px}
 .row a.text-sm{white-space:nowrap}
+
+/* ===== radar revamp: add at the very end of revamp.css ===== */
+.rd-sweep{transform-box:view-box;transform-origin:160px 160px;animation:rd-spin 7s linear infinite}
+@keyframes rd-spin{to{transform:rotate(360deg)}}
+.rd-sweep-line{stroke:var(--accent1);stroke-width:2;stroke-linecap:round;opacity:.7}
+.rd-flow{fill:none;stroke:var(--text-soft);stroke-width:1.8;stroke-linecap:round;stroke-dasharray:1 16;opacity:.4;animation:rd-flow 4s linear infinite}
+@keyframes rd-flow{to{stroke-dashoffset:-34}}
+.rd-tick{stroke:var(--text-soft);stroke-width:1.2;opacity:.5}
+.rd-tick.major{stroke-width:2;opacity:.85}
+.rd-arrow{stroke-width:3}
+.radar-card{padding:20px 14px 18px}
+@media (prefers-reduced-motion:reduce){.rd-puff{display:none}}
+
+/* light theme: a slightly see-through card, with tinted chips and buttons so they stand out */
+.glass-card,.glass{background:rgba(255,255,255,.58);border-color:rgba(255,255,255,.95)}
+.chip,.btn.ghost,.field,.dd-btn{background:rgba(109,92,232,.08);border:1px solid rgba(109,92,232,.2);box-shadow:none}
+.chip.on{background:var(--grad);border-color:transparent;background-origin:border-box}

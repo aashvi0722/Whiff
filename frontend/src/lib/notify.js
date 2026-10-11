@@ -10,9 +10,11 @@ export async function enable() {
 }
 export const disable = () => { try { localStorage.removeItem(K) } catch { /* blocked */ } }
 export async function show(title, body, tag) {
+  const opts = { body, icon: '/favicon.svg' }
+  if (tag) { opts.tag = tag; opts.renotify = true }
   try {
     const reg = await navigator.serviceWorker?.getRegistration()
-    if (reg) return await reg.showNotification(title, { body, tag, icon: '/favicon.svg' })
-  } catch { /* fall through */ }
-  try { new Notification(title, { body, tag }) } catch { /* unsupported */ }
+    if (reg) { await reg.showNotification(title, opts); return 'ok' }
+  } catch { /* fall through to the page-level API */ }
+  try { new Notification(title, opts); return 'ok' } catch { return 'failed' }
 }
