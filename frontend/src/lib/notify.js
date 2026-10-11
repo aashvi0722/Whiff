@@ -10,7 +10,7 @@ export async function enable() {
 }
 export const disable = () => { try { localStorage.removeItem(K) } catch { /* blocked */ } }
 export async function show(title, body, tag) {
-  const opts = { body, icon: '/favicon.svg' }
+  const opts = { body, icon: '/icon-192.png' }
   if (tag) { opts.tag = tag; opts.renotify = true }
   try {
     const reg = await navigator.serviceWorker?.getRegistration()
